@@ -623,6 +623,7 @@ function drawScore(score, name) {
         clearNameLabel.style.color = "rgb(140, 3, 232)";
     } else {
         scoreCounterLabel.style.color = "black"
+        clearNameLabel.style.color = "rgb(140, 3, 232)";
     }
     scoreCounterLabel.textContent = "Score: " + JSON.stringify(score);
     clearNameLabel.textContent = name;
