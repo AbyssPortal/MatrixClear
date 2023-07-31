@@ -125,6 +125,7 @@ class Piece {
         this.movements = maxResets;
         this.placedEvents = [];
         this.active = true;
+        this.lockTimer = -1;
     }
 
     returnToInitial() {
@@ -192,12 +193,12 @@ class Piece {
         if (this.movements > 0 && this.isGrounded()) {
             this.movements--;
         }
-        let currMovments = this.movements;
-        setTimeout(() => {
-            if (this.movements == currMovments) {
+        if (this.movements > 0) {
+            clearTimeout(this.lockTimer);
+            this.lockTimer = setTimeout(() => {
                 this.trySet();
-            }
-        }, lockDelay);
+            }, lockDelay);
+        }
         this.calcCenter();
         return true;
     }
