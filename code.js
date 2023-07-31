@@ -20,7 +20,11 @@ var squares = [];
 
 var bag = [];
 
-let scoreCounter = document.getElementById("scoreCounter");
+let scoreCounterLabel = document.getElementById("scoreCounter");
+
+
+let clearNameLabel = document.getElementById("clearName");
+
 
 stackerDiv = document.getElementById("stacker")
 
@@ -28,9 +32,10 @@ for (let i = 0; i < height; i++) {
     squaresRow = [];
     for (let j = 0; j < totalWidth; j++) {
         let square = document.createElement("label");
-        square.textContent = "[_]";
+        square.textContent = "09 ";
         square.style.color = "white";
         square.style.backgroundcolor = "white";
+        square.style.display = "inline-block";
         stackerDiv.appendChild(square)
         squaresRow.push(square);
     }
@@ -354,6 +359,12 @@ class Game {
         this.currPiece.moveDown();
         this.draw()
     }
+    softDrop() {
+        if (this.currPiece.moveDown()) {
+            this.score += 1;
+        }
+        this.draw()
+    }
     rotateCW() {
         this.currPiece.rotateClockwise();
         this.draw()
@@ -392,7 +403,9 @@ class Game {
         this.draw()
     }
     hardDrop() {
-        while (this.currPiece.moveDown());
+        while (this.currPiece.moveDown()) {
+            this.score += 2;
+        }
         this.currPiece.trySet()
     }
 }
@@ -444,7 +457,7 @@ function generateSevenBagPiece(board) {
         }
         //J
         case 3: {
-            return new Piece([{ x: 4, y: 3  }, { x: 5, y: 3 },
+            return new Piece([{ x: 4, y: 3 }, { x: 5, y: 3 },
             { x: 6, y: 3 }, { x: 4, y: 2 }], "blue", board);
             break;
         }
@@ -495,7 +508,7 @@ document.onkeydown = function (e) {
         leftTicksLeft = das;
     }
     else if (e.code == "ArrowDown") {
-        game.moveDown()
+        game.softDrop()
         goingDown = true;
     }
     else if (e.code == "ArrowUp") {
@@ -566,7 +579,7 @@ setInterval(() => {
         game.moveLeft();
     }
     if (downTicksLeft <= 0) {
-        game.moveDown()
+        game.softDrop()
     }
 }, 16);
 
@@ -605,11 +618,13 @@ function drawPiece(piece) {
 
 function drawScore(score, name) {
     if (name == "MATRIX CLEAR") {
-        scoreCounter.style.color = "rgb(140, 3, 232)";
+        scoreCounterLabel.style.color = "rgb(140, 3, 232)";
+        clearNameLabel.style.color = "rgb(140, 3, 232)";
     } else {
-        scoreCounter.style.color = "black"
+        scoreCounterLabel.style.color = "black"
     }
-    scoreCounter.textContent = JSON.stringify(score) + "                                                    " + name;
+    scoreCounterLabel.textContent = "Score: " + JSON.stringify(score);
+    clearNameLabel.textContent = name;
 }
 
 function drawHold(piece) {
@@ -628,11 +643,17 @@ function drawGameOver() {
     let i = 0
     let j = 0
     document.body.style.backgroundColor = "black"
-    scoreCounter.style.color = "white";
+    scoreCounterLabel.style.color = "white";
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < totalWidth; j++) {
             setTimeout(() => {
-                squares[i][j].textContent = "HA"
+                stackerDiv.style.fontFamily = "sans-serif"
+                if (i % 2 == 0) {
+                    squares[i][j].textContent = "HA"
+                }
+                else {
+                    squares[i][j].textContent = "AH"
+                }
                 squares[i][j].style.color = "red";
                 squares[i][j].style.backgroundColor = "black";
 
