@@ -21,12 +21,10 @@ var squares = [];
 var bag = [];
 
 let scoreCounterLabel = document.getElementById("scoreCounter");
-
-
 let clearNameLabel = document.getElementById("clearName");
+let stackerDiv = document.getElementById("stacker");
+let tryAgain = document.getElementById("tryAgain");
 
-
-stackerDiv = document.getElementById("stacker")
 
 for (let i = 0; i < height; i++) {
     squaresRow = [];
@@ -494,10 +492,11 @@ var downTicksLeft
 
 document.onkeydown = function (e) {
 
+
     if (e.repeat) {
         return;
     }
-
+    let used = true;
     if (e.code == "ArrowRight") {
         game.moveRight()
         goingRight = true;
@@ -526,6 +525,11 @@ document.onkeydown = function (e) {
     }
     else if (e.code == "Space") {
         game.hardDrop()
+    } else {
+        used = false;
+    }
+    if (used) {
+        e.preventDefault();
     }
     game.draw()
 }
@@ -658,10 +662,14 @@ function drawGameOver() {
                 }
                 squares[i][j].style.color = "red";
                 squares[i][j].style.backgroundColor = "black";
-
             }, (j + i * height) * 5);
         }
     }
+    setTimeout(() => {
+        tryAgain.heigh
+        tryAgain.hidden = false;
+    }, height * totalWidth * 5);
+
 }
 
 function drawNext(next) {
